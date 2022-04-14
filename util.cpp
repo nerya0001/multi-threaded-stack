@@ -63,17 +63,15 @@ tbb::mutex printLock;
 void push(char *str, p_stack *head) {
 
     pushLock.lock();
-
     // Parse(str);
-
     stack *n = (stack *) my_malloc(sizeof(stack));
-
     bzero(n->str, 1024);
     // strcpy(n->str, afterParsing);
     strcpy(n->str, str);
     n->next = *head;
     *head = n;
-
+    printf("%s%s has pushed successfully\n", n->str, GREEN);
+    printf("%s", NORMAL);
     pushLock.unlock();
 }
 
@@ -92,11 +90,10 @@ void pop(p_stack *head) {
     } else {
         stack *temp = *head;
         *head = (*head)->next;
-        printf("%s%s has Poped successfully\n\n", temp->str, GREEN);
+        printf("%s%s has Poped successfully\n", temp->str, GREEN);
         printf("%s", NORMAL);
         my_free(temp);
     }
-
     popLock.unlock();
 }
 
@@ -106,18 +103,20 @@ void pop(p_stack *head) {
  * @param head 
  */
 const char *peek(p_stack *head) {
-
     peekLock.lock();
     if (*head == NULL) {
         char *errorMsg = (char *) malloc(24 * sizeof(char));
         strcpy(errorMsg, "ERROR: Stack is empty!");
-//        printf("%sERROR: Stack is empty!\n\n", RED);
-//        printf("%s", NORMAL);
+        printf("%s ERROR: Stack is empty!\n", RED);
+        printf("%s", NORMAL);
+        peekLock.unlock();
         return errorMsg;
     } else {
+        printf("%s%s Top has successfully sent to client\n", (*head)->str, GREEN);
+        printf("%s", NORMAL);
+        peekLock.unlock();
         return (*head)->str;
     }
-    peekLock.unlock(); // umm? not sure.
 }
 
 /**

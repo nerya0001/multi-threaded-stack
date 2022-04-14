@@ -70,16 +70,19 @@ void *myThread(void *new_fd) {
             str[j] = '\0';
             push(str, &head);
             send(clientSock, "Pushed to stack successfully!", 29, 0);
+            fflush(stdout);
             // printPrompt();
         } else if (!strcmp("POP", clientMsg)) {
             pop(&head);
             send(clientSock, "Popped from stack successfully!", 31, 0);
+            fflush(stdout);
             // printPrompt();
         } else if (!strcmp("TOP", clientMsg)) {
             strcat(output, peek(&head));
             send(clientSock, output, strlen(output), 0);
             memset(output, '0', sizeof(output));
             strcpy(output, "OUTPUT: ");
+            fflush(stdout);
             // printPrompt();
         } else if (strncmp(clientMsg, "PRINT", 5) == 0) {
             displayStack(&head);
