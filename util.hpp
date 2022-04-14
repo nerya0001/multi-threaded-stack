@@ -14,33 +14,33 @@
 
 
 typedef struct stack {
-  char str[1024];
-  struct stack* next;
-}stack, *p_stack;
+    char str[1024];
+    struct stack *next;
+} stack, *p_stack;
 
 
-  // push
-  void push(char* str, p_stack* head);
+// push
+void push(char *str, p_stack *head);
 
-  // pop the top element from the stack
-  void pop(p_stack* head);
+// pop the top element from the stack
+void pop(p_stack *head);
 
-  // peek but not pop
-  void peek(p_stack* head);
+// peek but not pop
+const char *peek(p_stack *head);
 
-  // parse buffer
-  char** parse(char* buffer);
+// parse buffer
+char **parse(char *buffer);
 
-  // print prompt
-  void printPrompt();
+// print prompt
+void printPrompt();
 
-  // display stack
-  void displayStack(p_stack* head);
+// display stack
+void displayStack(p_stack *head);
 
-  // my malloc implementation
-  void* my_malloc(size_t size);
+// my malloc implementation
+void *my_malloc(size_t size);
 
-  // my free implementation
-  void my_free(void* ptr);
+// my free implementation
+void my_free(void *ptr);
 
-  #endif
+#endif
