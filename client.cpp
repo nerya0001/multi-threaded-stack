@@ -92,9 +92,13 @@ int main(int argc, char *argv[])
 		{
 			while (getchar() != '\n');
 		}
+		if (strncmp(input, "EXIT", 4) == 0) {
+			printf("client disconnected\n");
+			break;
+		}
 		if (send(sockfd, input, strlen(input) + 1, 0) == -1)
 		{
-			perror("send");
+			perror("sending unsuccessful\n");
 		}
 		bzero(input, 1024);
 	}

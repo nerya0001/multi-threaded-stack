@@ -12,10 +12,11 @@
 
 char afterParsing[1024]; // parsed input
 
-// three locks - one for each function
+// locks - one for each function
 tbb::mutex pushLock;
 tbb::mutex popLock;
 tbb::mutex peekLock;
+tbb::mutex printLock;
 
 /**
  * @brief print parsed input
@@ -112,11 +113,7 @@ void peek(p_stack* head) {
         printf("%sERROR: Stack is empty!\n\n", RED);
         printf("%s", NORMAL); 
     } else {
-        printf("OUTPUT: ");
-        for (uint i = 0; i < strlen((*head)->str); i++) {
-            printf("%c", (*head)->str[i]);
-        }
-        printf("\n");
+        printf("OUTPUT: %s\n", (*head)->str);
     }
 
     peekLock.unlock();
@@ -128,6 +125,9 @@ void peek(p_stack* head) {
  * @param head 
  */
 void displayStack(p_stack* head) {
+
+    printLock.lock();
+
     stack* temp = *head;
 
     if (*head == NULL) {
@@ -143,6 +143,8 @@ void displayStack(p_stack* head) {
         }
         printf("\n");
     }
+
+    printLock.unlock();
     
 }
 

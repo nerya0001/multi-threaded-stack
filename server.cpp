@@ -57,15 +57,23 @@ void *myThread(void* new_fd)
     int numbytes;
 	int cl = *(int *)new_fd;
 
-	while (strcmp(buffer, "EXIT")) {
+	while (1) {
+	// while (strcmp(buffer, "EXIT")) {
 		char str[1024];
         bzero(str, 1024);
 
+        if (strncmp(buffer, "EXIT", 4) == 0) {
+			printf("client disconnected\n");
+			close(cl);
+			break;
+		}
         if (strncmp(buffer, "PUSH", 4) == 0) {
-			for (uint i = 5, j = 0; i < strlen(buffer); i++, j++)
+			uint j = 0;
+			for (uint i = 5; i < strlen(buffer); i++, j++)
             {
                 str[j] = buffer[i];
             }
+			str[j]='\0';
             push(str, &head);
             // printPrompt();
         }
@@ -89,21 +97,16 @@ void *myThread(void* new_fd)
         }
         if (!numbytes)
         {
-            printf("client disconnect\n");
+            printf("client disconnected\n");
             close(cl);
             return NULL;
         }
         
         buffer[numbytes] = '\0';
-        printf("server received: ");
-        for (uint i = 0; i < strlen(buffer); i++)
-        {
-            printf("%c", buffer[i]);
-        }
-        printf("\n");
+        printf("server received: %s\n", buffer);
+
     }
-	printf("client disconnected");
-	close(cl);
+	
     return NULL;
 }
 
