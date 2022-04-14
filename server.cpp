@@ -15,12 +15,17 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include <pthread.h>
+#include "util.hpp"
+
 
 #define PORT "3490" // the port users will be connecting to
 
 #define BACKLOG 10 // how many pending connections queue will hold
 
-// #define CLIENT_NUMBER 5
+stack* head = NULL;
+
+
+// printPrompt();
 
 void sigchld_handler(int s)
 {
@@ -48,14 +53,58 @@ void *get_in_addr(struct sockaddr *sa)
 
 void *myThread(void* new_fd)
 {
+	char buffer[1024] = {0};
+    int numbytes;
 	int cl = *(int *)new_fd;
-	printf("hey \n");
-	sleep(5);
-	if (send(cl, "Hello world!", 13, 0) == -1)
-	{
-		perror("send");
-	}
+
+	while (strcmp(buffer, "EXIT")) {
+		char str[1024];
+        bzero(str, 1024);
+
+        if (strncmp(buffer, "PUSH", 4) == 0) {
+			for (uint i = 5, j = 0; i < strlen(buffer); i++, j++)
+            {
+                str[j] = buffer[i];
+            }
+            push(str, &head);
+            // printPrompt();
+        }
+        else if (strncmp(buffer, "POP", 3) == 0) {
+            pop(&head);
+            // printPrompt();
+        }
+        else if (strncmp(buffer, "TOP", 3) == 0) {
+            peek(&head);
+            // printPrompt();
+        } 
+        else if (strncmp(buffer, "PRINT", 5) == 0) {  
+            displayStack(&head); 
+            // printPrompt();
+        } 
+		bzero(buffer, 1024);
+        if ((numbytes = recv(cl, buffer, BUF_SIZE - 1, 0)) == -1)
+        {
+            perror("recv");
+            exit(1);
+        }
+        if (!numbytes)
+        {
+            printf("client disconnect\n");
+            close(cl);
+            return NULL;
+        }
+        
+        buffer[numbytes] = '\0';
+        printf("server received: ");
+        for (uint i = 0; i < strlen(buffer); i++)
+        {
+            printf("%c", buffer[i]);
+        }
+        printf("\n");
+    }
+	printf("client disconnected");
 	close(cl);
+    return NULL;
 }
 
 int main(void)
@@ -132,10 +181,10 @@ int main(void)
 
 	printf("server: waiting for connections...\n");
 
-	pthread_t tid;
-	// pthread_t tid[CLIENT_NUMBER];
+	// pthread_t tid;
+	pthread_t tid[3];
 
-	// int i = 0;
+	int i = 0;
 	while (1)
 	{ // main accept() loop
 		sin_size = sizeof their_addr;
@@ -151,22 +200,11 @@ int main(void)
 				  s, sizeof s);
 		printf("server: got connection from %s\n", s);
 
-		if (pthread_create(&tid, NULL, &myThread, &new_fd) != 0)
-		// if (pthread_create(&tid[i++], NULL, myThread, new_fd) != 0)
+		// if (pthread_create(&tid, NULL, &myThread, &new_fd) != 0)
+		if (pthread_create(&tid[i++], NULL, &myThread, &new_fd) != 0)
 		{
 			printf("Failed to create thread\n");
 		}
-
-		// if (i >= CLIENT_NUMBER)
-		// {
-		// 	i = 0;
-		// 	while (i < CLIENT_NUMBER)
-		// 	{
-		// 		pthread_join(tid[i++], NULL);
-		// 	}
-		
-		// 	i = 0;
-		// }
 	}
 
 	return 0;

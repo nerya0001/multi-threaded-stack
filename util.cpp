@@ -7,80 +7,131 @@
 #include <dirent.h>
 #include <sys/wait.h>
 #include "util.hpp"
+#include <tbb/mutex.h>
 
 
-char* parbuff[1024];
+char afterParsing[1024]; // parsed input
 
-void print_parsed() {
-    int i = 0;
-    while (parbuff[i] != NULL) {
-        printf("%s ", parbuff[i]);
-        i++;
-    }
-    printf("\n");
-}
+// three locks - one for each function
+tbb::mutex pushLock;
+tbb::mutex popLock;
+tbb::mutex peekLock;
 
-void Parse(char* buffer) {
-    // char* parbuff[1024];
-    char* pbuff;
-    int i = 0;
-    pbuff = strtok(buffer, " ");
-    while (pbuff != NULL) {
-        parbuff[i++] = pbuff;
-        pbuff = strtok(NULL, " ");
-    }
-    // print_parsed();
-    // return parbuff;
-}
+/**
+ * @brief print parsed input
+ * 
+ */
+// void print_parsed() {
+//     int i = 0;
+//     while (afterParsing[i] != NULL) {
+//         printf("%s ", afterParsing[i]);
+//         i++;
+//     }
+//     printf("\n");
+// }
 
+/**
+ * @brief parse input into strings array
+ * 
+ * @param buffer 
+ */
+// void Parse(char* buffer) {
+//     char* parbuff[1024];
+//     char* pbuff;
+//     int k = 0;
+//     pbuff = strtok(buffer, " ");
+//     while (pbuff != NULL) {
+//         parbuff[k++] = pbuff;
+//         pbuff = strtok(NULL, " ");
+//     }
+//     for (size_t i = 1; i < k; i++)
+//     {
+//         for (uint j = 0; j < strlen(parbuff[i]); j++)
+//             {
+//                 afterParsing[j] = parbuff[i][j];
+//             }
+//     }
+// }
+
+/**
+ * @brief push newly allocated element into the stack
+ * 
+ * @param str 
+ * @param head 
+ */
 void push(char* str, p_stack* head) {
-    // printf("str: %s\n", str);
+
+    pushLock.lock();
+  
     // Parse(str);
-    // char** parsed = parbuff;
+
     stack* n = (stack*)malloc(sizeof(stack)); 
-    // n->str = str + 5;
-    n->str = str;
-    // bzero(n->str,1024);
-    // strcpy(n->str, str);
+
+    bzero(n->str,1024);
+    // strcpy(n->str, afterParsing);
+    strcpy(n->str, str);
     n->next = *head;
     *head = n;
-    for (int i = 0; i < strlen(str); i++)
-    {
-        printf("%c",str[i]);
-    }
+
+    pushLock.unlock();
 }
 
+/**
+ * @brief pop the top element from the stack, and free the memory
+ * 
+ * @param head 
+ */
 void pop(p_stack* head) {
-    if (head == NULL) {
-        printf("%sStack is empty!\n\n", RED);
+
+    popLock.lock();
+
+    if (*head == NULL) {
+        printf("%sERROR: Stack is empty!\n", RED);
         printf("%s", NORMAL); 
     } else {
         stack* temp = *head;
         *head = (*head)->next;
-        printf("%s%sdeleted successfully\n\n", temp->str, GREEN);
+        printf("%s%s has Poped successfully\n\n", temp->str, GREEN);
         printf("%s", NORMAL); 
         free(temp);
     }
+
+    popLock.unlock();
 }
 
+/**
+ * @brief peek on the top element in the stack
+ * 
+ * @param head 
+ */
 void peek(p_stack* head) {
-    if (head == NULL) {
-        printf("%sStack is empty!\n\n", RED);
+
+    peekLock.lock();
+
+    if (*head == NULL) {
+        printf("%sERROR: Stack is empty!\n\n", RED);
         printf("%s", NORMAL); 
     } else {
-        printf("head->str: %s\n", (*head)->str);
-        
-        // char* temp;
-        // strcpy(temp, head->str);
-        // printf("%s\n", temp);
+        printf("OUTPUT: ");
+        for (uint i = 0; i < strlen((*head)->str); i++) {
+            printf("%c", (*head)->str[i]);
+        }
+        printf("\n");
     }
+
+    peekLock.unlock();
 }
 
-
+/**
+ * @brief print stack content
+ * 
+ * @param head 
+ */
 void displayStack(p_stack* head) {
     stack* temp = *head;
-    if (head == NULL) {
-        printf("\n%sStack is empty!\n\n", RED);
+
+    if (*head == NULL) {
+        printf("\n%sERROR: Stack is empty!\n", RED);
         printf("%s", NORMAL); 
     } else {
         printf("%s ", temp->str);
@@ -95,36 +146,11 @@ void displayStack(p_stack* head) {
     
 }
 
-
+/**
+ * @brief maybe a prompt function
+ * 
+ */
 void printPrompt() {
     printf("%senter command: ", GREEN);
     printf("%s", NORMAL);  
 }
-
-
-// int sysReplacement(char* buffer) {
-    
-//     // parse the input by " "
-//     char** parsed = parse(buffer);
- 
-//     // fork a child process
-//     int pid = fork();
-    
-//     if (pid < 0) {
-
-//         // error  
-//         return 1;
-        
-//     } else if (pid == 0) {
-
-//         execvp(parsed[0], parsed); 
-
-//     } else {
-
-//         /* parent process */
-//         /* parent will wait for the child to complete */
-//         wait(NULL);
-//     }
-//     return 0;
-// }
-

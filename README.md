@@ -25,4 +25,10 @@ make all
 * for example:  
 ```
 ./client 127.0.0.1
+```  
+
+this server is also compatible with telnet - the command is:  
+
+```
+telnet remotehostname 3490
 ```

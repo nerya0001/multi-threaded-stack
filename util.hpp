@@ -14,20 +14,10 @@
 
 
 typedef struct stack {
-  char* str;
+  char str[1024];
   struct stack* next;
 }stack, *p_stack;
 
-// extern stack* head;
-
-// int clientSocket;
-
-
-  // initiate the client code
-  void initClient();
-
-  // initiate the server code
-  void initServer();
 
   // push
   void push(char* str, p_stack* head);
@@ -37,9 +27,6 @@ typedef struct stack {
 
   // peek but not pop
   void peek(p_stack* head);
-
-  // instead of using system()
-  int sysReplacement(char* buffer);
 
   // parse buffer
   char** parse(char* buffer);

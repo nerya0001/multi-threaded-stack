@@ -2,35 +2,28 @@ CC=g++
 AR=ar
 FLAGS=-Wall -g
 
-all: main server
+all: server client
 
-main: main.o libutil.a server.o client.o 
-	$(CC) $(FLAGS) main.o libutil.a -o main
-
-server: server.o
-	$(CC) $(FLAGS) server.o -o server -lpthread
+server: libutil.a server.o 
+	$(CC) $(FLAGS) server.o libutil.a -o server -lpthread -ltbb
+client: client.o
+	$(CC) $(FLAGS) client.o -o client
 
 libutil.a: util.o
 	$(AR) -rcs libutil.a util.o
 
 server.o: server.cpp util.hpp
 	$(CC) $(FLAGS) -c server.cpp -o server.o
-
-client.o: client.cpp util.hpp
+client.o: client.cpp 
 	$(CC) $(FLAGS) -c client.cpp
-
-main.o: main.cpp util.hpp
-	$(CC) $(FLAGS) -c main.cpp
-
 util.o: util.cpp util.hpp
 	$(CC) $(FLAGS) -c util.cpp	
-
 
 
 .PHONY: clean all
 
 clean:
-	rm -f *.o *.a main server client
+	rm -f *.o *.a server client
 
 
 
