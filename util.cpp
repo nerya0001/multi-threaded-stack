@@ -194,5 +194,17 @@ void my_free(void *ptr) {
     free_block_list_head.next = block;
 }
 
+//untested
+void *my_calloc(size_t nmemb, size_t size) {
+    char *p;
+    if (nmemb == 0 || size == 0) {
+        return nullptr;
+    } else {
+        p = static_cast<char *>(my_malloc(nmemb * size));
+        bzero(p, nmemb * size);
+        return p;
+    }
+}
+
 
 
