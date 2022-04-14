@@ -65,7 +65,7 @@ void push(char* str, p_stack* head) {
   
     // Parse(str);
 
-    stack* n = (stack*)malloc(sizeof(stack)); 
+    stack* n = (stack*)my_malloc(sizeof(stack)); 
 
     bzero(n->str,1024);
     // strcpy(n->str, afterParsing);
@@ -93,7 +93,7 @@ void pop(p_stack* head) {
         *head = (*head)->next;
         printf("%s%s has Poped successfully\n\n", temp->str, GREEN);
         printf("%s", NORMAL); 
-        free(temp);
+        my_free(temp);
     }
 
     popLock.unlock();
@@ -131,7 +131,7 @@ void displayStack(p_stack* head) {
     stack* temp = *head;
 
     if (*head == NULL) {
-        printf("\n%sERROR: Stack is empty!\n", RED);
+        printf("%sERROR: Stack is empty!\n", RED);
         printf("%s", NORMAL); 
     } else {
         printf("%s ", temp->str);
@@ -154,3 +154,43 @@ void printPrompt() {
     printf("%senter command: ", GREEN);
     printf("%s", NORMAL);  
 }
+
+
+typedef struct free_block {
+    size_t size;
+    struct free_block* next;
+} free_block;
+
+static free_block free_block_list_head = { 0, 0 };
+
+// static const size_t overhead = sizeof(size_t);
+
+static const size_t align_to = 16;
+
+void* my_malloc(size_t size) {
+    size = (size + sizeof(free_block) + (align_to - 1)) & ~ (align_to - 1);
+    free_block* block = free_block_list_head.next;
+    free_block** head = &(free_block_list_head.next);
+    while (block != 0) {
+        if (block->size >= size) {
+            *head = block->next;
+            return ((char*)block) + sizeof(free_block);
+        }
+        head = &(block->next);
+        block = block->next;
+    }
+
+    block = (free_block*)sbrk(size);
+    block->size = size;
+
+    return ((char*)block) + sizeof(free_block);
+}
+
+void my_free(void* ptr) {
+    free_block* block = (free_block*)(((char*)ptr) - sizeof(free_block ));
+    block->next = free_block_list_head.next;
+    free_block_list_head.next = block;
+}
+
+
+

@@ -37,4 +37,10 @@ typedef struct stack {
   // display stack
   void displayStack(p_stack* head);
 
+  // my malloc implementation
+  void* my_malloc(size_t size);
+
+  // my free implementation
+  void my_free(void* ptr);
+
   #endif
