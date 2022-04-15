@@ -1,5 +1,5 @@
 # Multi-Threaded Lock Free Stack  
-> Made by [Nerya Bigon]()  
+> Made by [Nerya Bigon](https://github.com/nerya0001) and [Ori Howard](https://github.com/OriHoward)
 
 The goal in this assignment is to understand how the OS implements malloc and free on multi-threaded system and how we implement mutexes.  
 
