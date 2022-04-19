@@ -2,11 +2,6 @@
 #include "string.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <cstddef>
-
-//#include <bits/stdc++.h>
-
-//using namespace std;
 
 
 Node *getnode(char *data) {

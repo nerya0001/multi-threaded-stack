@@ -37,13 +37,4 @@ void printPrompt();
 // display stack
 void displayStack(p_stack *head);
 
-// my malloc implementation
-void *my_malloc(size_t size);
-
-// my free implementation
-void my_free(void *ptr);
-
-//my calloc implementation
-void *my_calloc(size_t nmemb, size_t size);
-
 #endif
