@@ -13,11 +13,7 @@
 
 char afterParsing[1024]; // parsed input
 
-// locks - one for each function
-tbb::mutex pushLock;
-tbb::mutex popLock;
-tbb::mutex peekLock;
-tbb::mutex printLock;
+tbb::mutex stackMutex;
 
 /**
  * @brief print parsed input
@@ -63,7 +59,7 @@ tbb::mutex printLock;
  */
 void push(char *str, p_stack *head) {
 
-    pushLock.lock();
+    stackMutex.lock();
     // Parse(str);
     stack *n = (stack *) my_malloc(sizeof(stack));
     bzero(n->str, 1024);
@@ -73,7 +69,7 @@ void push(char *str, p_stack *head) {
     *head = n;
     printf("%s%s has pushed successfully\n", n->str, GREEN);
     printf("%s", NORMAL);
-    pushLock.unlock();
+    stackMutex.unlock();
 }
 
 /**
@@ -83,7 +79,7 @@ void push(char *str, p_stack *head) {
  */
 void pop(p_stack *head) {
 
-    popLock.lock();
+    stackMutex.lock();
 
     if (*head == NULL) {
         printf("%sERROR: Stack is empty!\n", RED);
@@ -95,7 +91,7 @@ void pop(p_stack *head) {
         printf("%s", NORMAL);
         my_free(temp);
     }
-    popLock.unlock();
+    stackMutex.unlock();
 }
 
 /**
@@ -104,18 +100,18 @@ void pop(p_stack *head) {
  * @param head 
  */
 const char *peek(p_stack *head) {
-    peekLock.lock();
+    stackMutex.lock();
     if (*head == NULL) {
         char *errorMsg = (char *) my_malloc(24 * sizeof(char));
         strcpy(errorMsg, "ERROR: Stack is empty!");
         printf("%s ERROR: Stack is empty!\n", RED);
         printf("%s", NORMAL);
-        peekLock.unlock();
+        stackMutex.unlock();
         return errorMsg;
     } else {
         printf("%s%s Top has successfully sent to client\n", (*head)->str, GREEN);
         printf("%s", NORMAL);
-        peekLock.unlock();
+        stackMutex.unlock();
         return (*head)->str;
     }
 }
@@ -127,7 +123,7 @@ const char *peek(p_stack *head) {
  */
 void displayStack(p_stack *head) {
 
-    printLock.lock();
+    stackMutex.lock();
 
     stack *temp = *head;
 
@@ -145,8 +141,7 @@ void displayStack(p_stack *head) {
         printf("\n");
     }
 
-    printLock.unlock();
-
+    stackMutex.unlock();
 }
 
 /**

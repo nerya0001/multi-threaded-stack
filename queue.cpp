@@ -2,19 +2,22 @@
 #include "string.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "memory.hpp"
 
 
 Node *getnode(char *data) {
-    pnode newNode = (pnode) malloc(sizeof(node));
+    pnode newNode = (pnode) my_malloc(sizeof(node));
     bzero(newNode->data, 1024);
     strcpy(newNode->data, data);
     return newNode;
 }
 
-void initQ(pqueue q) {
-    q->rear = q->front = NULL;
-    q->size = 0;
-}
+//void initQ(pqueue q) {
+//    q->rear = (pnode) my_malloc(sizeof(node));
+//    q->front = (pnode) my_malloc(sizeof(node));
+//    q->rear-> = q->front = NULL;
+//    q->size = 0;
+//}
 
 
 int isEmpty(pqueue q) {
@@ -25,7 +28,16 @@ int size(pqueue q) {
     return q->size;
 }
 
-void Enqueue(pqueue q, pnode *head, char *data) {
+char *getRear(pqueue q) {
+    if (!isEmpty(q)) {
+        return q->rear->data;
+    }
+    char *errorMsg = (char *) my_malloc(24 * sizeof(char));
+    strcpy(errorMsg, "ERROR: Empty!");
+    return errorMsg;
+}
+
+void Enqueue(pqueue q, char *data) {
     pnode newNode = getnode(data);
     if (q->rear == NULL) {
         q->front = q->rear = newNode;
@@ -39,7 +51,7 @@ void Enqueue(pqueue q, pnode *head, char *data) {
 }
 
 void Dequeue(pqueue q) {
-    if (isEmpty()) {
+    if (isEmpty(q)) {
         printf("UnderFlow\n");
     } else {
         if (q->rear == NULL) {
