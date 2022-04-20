@@ -135,8 +135,7 @@ int main(void) {
             continue;
         }
 
-        if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes,
-                       sizeof(int)) == -1) {
+        if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
             perror("setsockopt");
             exit(1);
         }

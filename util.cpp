@@ -205,6 +205,3 @@ void *my_calloc(size_t nmemb, size_t size) {
         return p;
     }
 }
-
-
-
