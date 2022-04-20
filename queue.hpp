@@ -17,9 +17,11 @@ typedef struct Queue {
     int size;
 } *pqueue;
 
-void initQ(struct queue *q);
+void initQ(pqueue q);
 
-void Enqueue(pqueue q, pnode *head, char *data); // insert to tail (same as PUSH)
+char *getRear(pqueue q);
+
+void Enqueue(pqueue q, char *data); // insert to tail (same as PUSH)
 
 void Dequeue(pqueue *q);// delete from tail (same as POP)
 

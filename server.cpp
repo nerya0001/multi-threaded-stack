@@ -15,13 +15,18 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include <pthread.h>
-#include "util.hpp"
+#include "stack.hpp"
+#include "queue.hpp"
 
 #define PORT "3490" // the port users will be connecting to
 
 #define BACKLOG 10 // how many pending connections queue will hold
 
 stack *head = NULL;
+//pqueue qHead = NULL;
+
+
+
 
 
 // printPrompt();
@@ -88,6 +93,12 @@ void *myThread(void *new_fd) {
             displayStack(&head);
             // printPrompt();
         }
+//        else if (strncmp(clientMsg, "ENQUEUE", 7) == 0) {
+//            char bob[5];
+//            strcat(bob, "gagi");
+//            Enqueue(qHead, bob);
+//            printf("%s", getRear(qHead));
+//        }
         bzero(clientMsg, 1024);
         if ((numbytes = recv(clientSock, clientMsg, BUF_SIZE - 1, 0)) == -1) {
             perror("recv");
@@ -117,6 +128,7 @@ int main(void) {
     char s[INET6_ADDRSTRLEN];
     int rv;
 
+//    initQ(qHead);
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
