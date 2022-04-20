@@ -29,7 +29,7 @@ void *get_in_addr(struct sockaddr *sa) {
 
 int main(int argc, char *argv[]) {
     int sockfd;
-    char buf[MAXDATASIZE];
+    // char buf[MAXDATASIZE];
     char ServerMsg[1024];
     struct addrinfo hints, *servinfo, *p;
     int rv;

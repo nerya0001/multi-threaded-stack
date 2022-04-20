@@ -26,9 +26,6 @@ stack *head = NULL;
 //pqueue qHead = NULL;
 
 
-
-
-
 // printPrompt();
 
 void sigchld_handler(int s) {
