@@ -16,49 +16,14 @@ char afterParsing[1024]; // parsed input
 tbb::mutex stackMutex;
 
 /**
- * @brief print parsed input
- * 
- */
-// void print_parsed() {
-//     int i = 0;
-//     while (afterParsing[i] != NULL) {
-//         printf("%s ", afterParsing[i]);
-//         i++;
-//     }
-//     printf("\n");
-// }
-
-/**
- * @brief parse input into strings array
- * 
- * @param buffer 
- */
-// void Parse(char* buffer) {
-//     char* parbuff[1024];
-//     char* pbuff;
-//     int k = 0;
-//     pbuff = strtok(buffer, " ");
-//     while (pbuff != NULL) {
-//         parbuff[k++] = pbuff;
-//         pbuff = strtok(NULL, " ");
-//     }
-//     for (size_t i = 1; i < k; i++)
-//     {
-//         for (uint j = 0; j < strlen(parbuff[i]); j++)
-//             {
-//                 afterParsing[j] = parbuff[i][j];
-//             }
-//     }
-// }
-
-/**
  * @brief push newly allocated element into the stack
  * 
  * @param str 
  * @param head 
  */
-void push(char *str, p_stack *head) {
 
+
+void push(char *str, p_stack *head) {
     stackMutex.lock();
     // Parse(str);
     stack *n = (stack *) my_malloc(sizeof(stack));
@@ -72,15 +37,20 @@ void push(char *str, p_stack *head) {
     stackMutex.unlock();
 }
 
+bool testLock() {
+//    sleep(6);
+    return stackMutex.try_lock();
+}
+
+
 /**
  * @brief pop the top element from the stack, and free the memory
  * 
  * @param head 
  */
 void pop(p_stack *head) {
-
     stackMutex.lock();
-
+    sleep(1);
     if (*head == NULL) {
         printf("%sERROR: Stack is empty!\n", RED);
         printf("%s", NORMAL);
@@ -99,7 +69,7 @@ void pop(p_stack *head) {
  * 
  * @param head 
  */
-const char *peek(p_stack *head) {
+char *peek(p_stack *head) {
     stackMutex.lock();
     if (*head == NULL) {
         char *errorMsg = (char *) my_malloc(24 * sizeof(char));
@@ -111,8 +81,10 @@ const char *peek(p_stack *head) {
     } else {
         printf("%s%s Top has successfully sent to client\n", (*head)->str, GREEN);
         printf("%s", NORMAL);
+        char *ans = (char *) my_malloc(sizeof((*head)->str));
+        strcpy(ans, (*head)->str);
         stackMutex.unlock();
-        return (*head)->str;
+        return ans;
     }
 }
 
@@ -144,13 +116,25 @@ void displayStack(p_stack *head) {
     stackMutex.unlock();
 }
 
-/**
- * @brief maybe a prompt function
- * 
- */
-void printPrompt() {
-    printf("%senter command: ", GREEN);
-    printf("%s", NORMAL);
+
+void *popTest(void *head) {
+    p_stack newHead = *(p_stack *) head;
+    stackMutex.lock();
+    bool nana = stackMutex.try_lock();
+//    sleep(4);
+    if (newHead == NULL) {
+        printf("%sERROR: Stack is empty!\n", RED);
+        printf("%s", NORMAL);
+    } else {
+        stack *temp = newHead;
+        newHead = (newHead)->next;
+        printf("%s%s has Poped successfully\n", temp->str, GREEN);
+        printf("%s", NORMAL);
+        my_free(temp);
+    }
+    stackMutex.unlock();
+    return (void*)nana;
 }
+
 
 

@@ -22,17 +22,16 @@ typedef struct stack {
 // push
 void push(char *str, p_stack *head);
 
+
 // pop the top element from the stack
 void pop(p_stack *head);
 
+void *popTest(void *head);
+
+bool testLock();
+
 // peek but not pop
-const char *peek(p_stack *head);
-
-// parse buffer
-char **parse(char *buffer);
-
-// print prompt
-void printPrompt();
+char *peek(p_stack *head);
 
 // display stack
 void displayStack(p_stack *head);
