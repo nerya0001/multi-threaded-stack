@@ -37,11 +37,6 @@ void push(char *str, p_stack *head) {
     stackMutex.unlock();
 }
 
-bool testLock() {
-//    sleep(6);
-    return stackMutex.try_lock();
-}
-
 
 /**
  * @brief pop the top element from the stack, and free the memory
@@ -117,11 +112,16 @@ void displayStack(p_stack *head) {
 }
 
 
+/**
+ * functions for testing
+ * @param head
+ * @return
+ */
+
 void *popTest(void *head) {
     p_stack newHead = *(p_stack *) head;
     stackMutex.lock();
-    bool nana = stackMutex.try_lock();
-//    sleep(4);
+    bool isUnlocked = stackMutex.try_lock();
     if (newHead == NULL) {
         printf("%sERROR: Stack is empty!\n", RED);
         printf("%s", NORMAL);
@@ -132,9 +132,17 @@ void *popTest(void *head) {
         printf("%s", NORMAL);
         my_free(temp);
     }
+    sleep(2);
     stackMutex.unlock();
-    return (void*)nana;
+    return (void *) isUnlocked;
 }
 
+void *testLock(void *head) {
+    return (void *) stackMutex.try_lock();
+}
 
+void *testLockSleep(void *head) {
+    sleep(5);
+    return (void *) stackMutex.try_lock();
+}
 

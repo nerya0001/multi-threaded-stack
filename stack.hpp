@@ -26,14 +26,19 @@ void push(char *str, p_stack *head);
 // pop the top element from the stack
 void pop(p_stack *head);
 
-void *popTest(void *head);
-
-bool testLock();
-
 // peek but not pop
 char *peek(p_stack *head);
 
 // display stack
 void displayStack(p_stack *head);
+
+// functions for testing the mutex
+
+void *popTest(void *head);
+
+void *testLock(void *head);
+
+void *testLockSleep(void *head);
+
 
 #endif
