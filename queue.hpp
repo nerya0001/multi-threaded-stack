@@ -15,9 +15,9 @@ typedef struct Queue {
     Node *front;
     Node *rear;
     int size;
-} *pqueue;
+} *pqueue,queue;
 
-void initQ(pqueue q);
+void initQ(pqueue *q);
 
 char *getRear(pqueue q);
 

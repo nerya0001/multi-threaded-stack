@@ -12,12 +12,11 @@ Node *getnode(char *data) {
     return newNode;
 }
 
-//void initQ(pqueue q) {
-//    q->rear = (pnode) my_malloc(sizeof(node));
-//    q->front = (pnode) my_malloc(sizeof(node));
-//    q->rear-> = q->front = NULL;
-//    q->size = 0;
-//}
+void initQ(pqueue *q) {
+    *q = (pqueue) malloc(sizeof(queue));
+    (*q)->rear = (*q)->front = NULL;
+    (*q)->size = 0;
+}
 
 
 int isEmpty(pqueue q) {

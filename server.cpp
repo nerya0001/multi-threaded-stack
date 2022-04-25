@@ -23,7 +23,7 @@
 #define BACKLOG 10 // how many pending connections queue will hold
 
 stack *head = NULL;
-//pqueue qHead = NULL;
+pqueue qHead = NULL;
 
 
 // printPrompt();
@@ -125,7 +125,7 @@ int main(void) {
     char s[INET6_ADDRSTRLEN];
     int rv;
 
-//    initQ(qHead);
+    initQ(&qHead);
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
