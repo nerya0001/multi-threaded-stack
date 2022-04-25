@@ -8,7 +8,7 @@
 
 typedef struct Node {
     char data[1024];
-    Node *next;
+    Node *next, *prev;
 } *pnode, node;
 
 typedef struct Queue {

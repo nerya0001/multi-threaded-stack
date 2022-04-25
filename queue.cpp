@@ -40,9 +40,10 @@ void enqueue(pqueue q, char *data) {
     pnode newNode = getnode(data);
     if (q->rear == NULL) {
         q->front = q->rear = newNode;
-        q->front->next = NULL;
-        q->rear->next = NULL;
+//        q->front->next = NULL;
+//        q->rear->next = NULL;
     } else {
+        newNode->prev = q->rear;
         q->rear->next = newNode;
         q->rear = newNode;
     }
@@ -51,12 +52,15 @@ void enqueue(pqueue q, char *data) {
 
 void dequeue(pqueue q) {
     if (isEmpty(q)) {
-        printf("UnderFlow\n");
+        printf("Queue is empty\n");
     } else {
         if (q->rear == NULL) {
             q->front = NULL;
         } else {
-            q->rear->next = NULL;
+            Node *temp = q->rear;
+            q->rear = q->rear->prev;
+            q->rear->next= NULL;
+//            free(temp);
         }
         q->size--;
     }
