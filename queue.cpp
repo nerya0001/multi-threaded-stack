@@ -27,7 +27,7 @@ int size(pqueue q) {
     return q->size;
 }
 
-char *getRear(pqueue q) {
+char *topRear(pqueue q) {
     if (!isEmpty(q)) {
         return q->rear->data;
     }
@@ -36,7 +36,7 @@ char *getRear(pqueue q) {
     return errorMsg;
 }
 
-void Enqueue(pqueue q, char *data) {
+void enqueue(pqueue q, char *data) {
     pnode newNode = getnode(data);
     if (q->rear == NULL) {
         q->front = q->rear = newNode;
@@ -49,7 +49,7 @@ void Enqueue(pqueue q, char *data) {
     q->size++;
 }
 
-void Dequeue(pqueue q) {
+void dequeue(pqueue q) {
     if (isEmpty(q)) {
         printf("UnderFlow\n");
     } else {

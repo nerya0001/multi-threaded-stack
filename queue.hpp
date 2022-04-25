@@ -19,11 +19,11 @@ typedef struct Queue {
 
 void initQ(pqueue *q);
 
-char *getRear(pqueue q);
+char *topRear(pqueue q);
 
-void Enqueue(pqueue q, char *data); // insert to tail (same as PUSH)
+void enqueue(pqueue q, char *data); // insert to tail (same as PUSH)
 
-void Dequeue(pqueue *q);// delete from tail (same as POP)
+void dequeue(pqueue q);// delete from tail (same as POP)
 
 int isEmpty();
 

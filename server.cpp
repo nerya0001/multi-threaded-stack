@@ -57,6 +57,7 @@ void *myThread(void *new_fd) {
         // while (strcmp(clientMsg, "EXIT")) {
         char str[1024];
         char output[1024] = "OUTPUT: ";
+        char babi[1024] = "";
         bzero(str, 1024);
 
         if (!strcmp("EXIT", clientMsg)) {
@@ -88,14 +89,29 @@ void *myThread(void *new_fd) {
             // printPrompt();
         } else if (strncmp(clientMsg, "PRINT", 5) == 0) {
             displayStack(&head);
+            send(clientSock, "", 1, 0);
+            fflush(stdout);
             // printPrompt();
+        } else if (strncmp(clientMsg, "ENQUEUE", 7) == 0) {
+            uint j = 0;
+            for (uint i = 8; i < strlen(clientMsg); i++, j++) {
+                babi[j] = clientMsg[i];
+            }
+            babi[j] = '\0';
+            enqueue(qHead, babi);
+            send(clientSock, "Enqueued to queue successfully!", 31, 0);
+            fflush(stdout);
+        } else if (strncmp(clientMsg, "DEQUEUE", 7) == 0) {
+            dequeue(qHead);
+            send(clientSock, "Dequeued from queue successfully!", 33, 0);
+            fflush(stdout);
+        } else if (strncmp(clientMsg, "TOPQ", 4) == 0) {
+            strcat(output, topRear(qHead));
+            send(clientSock, output, strlen(output), 0);
+            memset(output, '0', sizeof(output));
+            strcpy(output, "OUTPUT: ");
+            fflush(stdout);
         }
-//        else if (strncmp(clientMsg, "ENQUEUE", 7) == 0) {
-//            char bob[5];
-//            strcat(bob, "gagi");
-//            Enqueue(qHead, bob);
-//            printf("%s", getRear(qHead));
-//        }
         bzero(clientMsg, 1024);
         if ((numbytes = recv(clientSock, clientMsg, BUF_SIZE - 1, 0)) == -1) {
             perror("recv");
