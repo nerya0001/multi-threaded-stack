@@ -15,7 +15,7 @@ typedef struct Queue {
     Node *front;
     Node *rear;
     int size;
-} *pqueue,queue;
+} *pqueue, queue;
 
 void initQ(pqueue *q);
 
@@ -28,7 +28,5 @@ void dequeue(pqueue q);// delete from tail (same as POP)
 int isEmpty();
 
 int size();
-
-void erase(pqueue *q);
 
 #endif //MULTI_THREADED_LOCK_FREE_STACK_QUEUE_HPP

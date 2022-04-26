@@ -40,6 +40,20 @@ telnet remotehostname 3490
 ```
 ./test
 ```  
+### Bonus
+In the bonus we were asked to implement the double ended queue.
+The queue will support the following commands:
+`ENQUEUE <text>` - insert to the tail (same as PUSH).  
+`DEQUEUE <text>` - remove the tail (same as POP).  
+we have also added a new command:  
+`TOPQ` - Same as peek
+
+#### Probable assumptions:
+We assumed the queue is a separate object from the stack.  
+All the client have access to the stack and to the queue.  
+The stack and the queue are safe threaded (Mutex).
+
+
 
 
 
